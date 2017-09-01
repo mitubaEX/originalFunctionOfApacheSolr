@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.github.mituba'
+version = '0.0.1-SNAPSHOT'
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+dependencies {
+    compile group: 'org.apache.solr', name: 'solr-core', version:'5.4.0'
+    compile fileTree(dir: './src/main/lib', includes: ['*.jar'])
+}
+
+jar {
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
