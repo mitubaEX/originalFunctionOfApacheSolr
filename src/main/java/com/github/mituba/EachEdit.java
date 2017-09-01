@@ -32,8 +32,22 @@ public class EachEdit extends ValueSource {
                 try {
                     NormalizedLevenshtein levenshtein = new NormalizedLevenshtein();
                     String dataString = dataFunc.objectVal(doc).toString();
+                    String[] dataStringArray = dataString.split(",");
+                    String[] inputStringArray = inputString.split(",");
+                    Float sum = new Float(0.0);
+                    Float max = new Float(0.0);
 
-                    return (new Float(1.0) - new Float(levenshtein.distance(dataString, inputString)));
+                    // 一個固定全部回してその結果をsumにぶち込んでいく．
+
+                    for(int i = 0; i < inputStringArray.length; i++){
+                        for(int j = 0; j < dataStringArray.length; j++){
+                            sum += (new Float(1.0) - new Float(levenshtein.distance(dataStringArray[j], inputStringArray[i])));
+                            max = Math.max(max, new Float(1.0) - new Float(levenshtein.distance(dataStringArray[j], inputStringArray[i])));
+                        }
+                    }
+
+//                    return (new Float(1.0) - new Float(levenshtein.distance(dataString, inputString)));
+                    return sum / new Float(inputStringArray.length * dataStringArray.length);
                 }catch (Exception e){
                     e.printStackTrace();
                     return new Float(0.0);
